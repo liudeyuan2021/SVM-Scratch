@@ -62,7 +62,7 @@ def dataloader_test(label):
     for file in tqdm(files):
         image = cv2.imread(os.path.join(dir, file), cv2.IMREAD_GRAYSCALE)
         image = cv2.resize(image, (400, 300)).squeeze()
-        image = np.array(image, dtype=np.float)
+        image = np.array(image, dtype=np.float16)
         image = image / 255.0
         # print(image)
         # cv2.imshow('0', image)
