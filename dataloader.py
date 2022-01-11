@@ -8,8 +8,8 @@ import torch
 from torch.nn import UpsamplingBilinear2d
 
 data_dir = {
-    0: '/mnt/data/mydata/0106Cls/0',    # Class 0 with its Data_Dir
-    1: '/mnt/data/mydata/0106Cls/1',    # Class 1 with its Data_Dir
+    0: 'dataset/0',    # Class 0 with its Data_Dir
+    1: 'dataset/1',    # Class 1 with its Data_Dir
 }
 
 
