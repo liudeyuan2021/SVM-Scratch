@@ -52,3 +52,27 @@ def dataloader(label):
 
     return images, labels
 
+def dataloader_test(label):
+    images, labels = [], []
+
+    dir = data_dir[label]
+    files = os.listdir(dir)
+    resize = UpsamplingBilinear2d(size=(300, 400))
+    
+    for file in tqdm(files):
+        image = cv2.imread(os.path.join(dir, file), cv2.IMREAD_GRAYSCALE)
+        image = cv2.resize(image, (400, 300)).squeeze()
+        image = np.array(image, dtype=np.float)
+        image = image / 255.0
+        # print(image)
+        # cv2.imshow('0', image)
+        # cv2.waitKey(1000)
+        # image = resize(torch.from_numpy(image)[None, None, :, :]).squeeze().numpy()
+        images.append(image)
+        labels.append(label)
+
+    return images, labels
+
+if __name__ == '__main__':
+    dataloader_test(0)
+

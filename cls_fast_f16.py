@@ -11,7 +11,7 @@ from utils import feature_extraction
 import time
 
 # Load the Data which is Preloaded by data2npy.py
-data = np.load('data_float16.npz')
+data = np.load('dataset/data_float16.npz')
 X_train, X_test, y_train, y_test = data['X_train'], data['X_test'], data['y_train'], data['y_test']
 
 # Extract the Feature
