@@ -22,16 +22,9 @@ X_test_feature = feature_extraction(X_test, feature='HOG')
 end_time = time.time()
 print("{:f}s for {:d} test feature extraction".format(end_time - start_time, y_test.shape[0]))
 
-# print(np.isinf(X_train_feature).any())
-# print(np.isfinite(X_train_feature).any())
-# for i in range(len(X_train_feature)):
-#     if np.isnan(X_train_feature[i]).any():
-#         print(i)
-
-# for x in X_train_feature:
-#     x[np.isnan(x)] = 0
-# for x in X_test_feature:
-#     x[np.isnan(x)] = 0
+# print(X_train.shape)
+# print(len(X_train_feature))
+# print([len(i) for i in X_train_feature])
 
 # Construct the Model
 print('Begin SVM')
@@ -51,15 +44,3 @@ print("{:d} positive classes in {:d} tests".format(np.sum(y_test), y_test.shape[
 print("accuracy_score: {:f}".format(accuracy_score(y_test, result)))
 print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_test, result, normalize=False)), len(y_test)))
 print("f1_score: {:f}".format(f1_score(y_test, result)))
-
-# Followings are the test code, showing which sample is misclassified
-
-# diff = y_test - result
-#
-# for i in range(y_test.shape[0]):
-#     if diff[i] == 1:
-#         cv2.imwrite('wa/FN/' + str(i) + '.png',
-#                     (np.stack([X_test[i, :, :], X_test[i, :, :], X_test[i, :, :]], axis=2) * 255).astype(np.uint8))
-#     elif diff[i] == -1:
-#         cv2.imwrite('wa/FP/' + str(i) + '.png',
-#                     (np.stack([X_test[i, :, :], X_test[i, :, :], X_test[i, :, :]], axis=2) * 255).astype(np.uint8))
