@@ -28,10 +28,32 @@ print("{:f}s for {:d} test feature extraction".format(end_time - start_time, y_t
 
 # Construct the Model
 print('Begin SVM')
-clf = svm.SVC(gamma='scale', decision_function_shape='ovo')
+# clf = svm.SVC(gamma='scale', decision_function_shape='ovo')
+clf = svm.SVC()
 
 # Train the Model
 clf.fit(X_train_feature, y_train)
+
+
+X_test_feature = np.array(X_test_feature)
+
+LIBSVM_IMPL = ["c_svc", "nu_svc", "one_class", "epsilon_svr", "nu_svr"]
+
+print('X_test_feature', X_test_feature.shape)
+print('self.support_', clf.support_.shape, clf.support_)
+print('self.support_vectors_', clf.support_vectors_.shape, clf.support_vectors_)
+print('self._n_support', clf._n_support)
+print('self._dual_coef_', clf._dual_coef_.shape, clf._dual_coef_)
+print('self._intercept_', clf._intercept_)
+print('self._probA', clf._probA)
+print('self._probB', clf._probB)
+print('svm_type', LIBSVM_IMPL.index(clf._impl))
+print('kernel', clf.kernel)
+print('self.degree', clf.degree)
+print('self.coef0', clf.coef0)
+print('self.gamma', clf._gamma)
+print('self.cache_size', clf.cache_size)
+print()
 
 # Get the Result
 start_time = time.time()
