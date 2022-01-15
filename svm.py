@@ -1,6 +1,5 @@
 import time
 import numpy as np
-from scipy.linalg.blas import ddot
 from utils import feature_extraction
 from sklearn.metrics import accuracy_score, f1_score
 
@@ -37,8 +36,8 @@ class svm_predict_model:
         self.SV = dense_to_libsvm(self.SV) # 支撑向量转化，和源代码对应，方便之后修改为C++代码
         self.label = np.arange(nr_class) # 类标签
 
-        for i in range(self.nr_class-1):
-            self.sv_coef[i] = self.sv_coef[i] + i * self.l
+        # for i in range(self.nr_class-1):
+        #     self.sv_coef[i] = self.sv_coef[i] + i * self.l
 
         for i in range(m):
             self.rho[i] = -self.rho[i]
@@ -52,10 +51,8 @@ def dense_to_libsvm(SV):
 
 
 def predict(X, support, SV, nSV, sv_coef, intercept, 
-            probA=np.empty(0), probB=np.empty(0), 
             svm_type=0, kernel='rbf', degree=3,
-            gamma=0.1, coef0=0.0,
-            class_weight=np.empty(0), sample_weight=np.empty(0), cache_size=100.0):
+            gamma=0.1, coef0=0.0,):
     """
     Predict target values of X given a model (low-level method)
     Parameters
@@ -71,8 +68,6 @@ def predict(X, support, SV, nSV, sv_coef, intercept,
         Coefficients of support vectors in decision function.
     intercept : array of shape (n_class*(n_class-1)/2)
         Intercept in decision function.
-    probA, probB : array of shape (n_class*(n_class-1)/2,)
-        Probability estimates.
     svm_type : {0, 1, 2, 3, 4}, default=0
         Type of SVM: C_SVC, NuSVC, OneClassSVM, EpsilonSVR or NuSVR
         respectively.
@@ -93,48 +88,31 @@ def predict(X, support, SV, nSV, sv_coef, intercept,
     """
     param = svm_predict_parameter(svm_type, kernel, degree, gamma, coef0)
     model = svm_predict_model(param, nSV.shape[0], support, SV, nSV, sv_coef, intercept)
-    blas_function = ddot # 之后还需改成自己实现的版本
 
-    # np.ndarray[np.int32_t, ndim=1, mode='c'] class_weight_label = np.arange(class_weight.shape[0], dtype=np.int32)
-
-    # set_predict_params(&param, svm_type, kernel, degree, gamma, coef0,
-    #                    cache_size, 0, <int>class_weight.shape[0],
-    #                    class_weight_label.data, class_weight.data)
-    # model = set_model(&param, <int> nSV.shape[0], SV.data, SV.shape,
-    #                   support.data, support.shape, sv_coef.strides,
-    #                   sv_coef.data, intercept.data, nSV.data, probA.data, probB.data)
-    # BlasFunctions blas_functions
-    # blas_functions.dot = _dot[double]
-
-    dec_values = copy_predict(X, model, blas_function)
-    # copy_predict(X.data, model, X.shape, dec_values.data, &blas_functions)
-    #     with nogil:
-    #         rv = copy_predict(X.data, model, X.shape, dec_values.data, &blas_functions)
-    #     if rv < 0:
-    #         raise MemoryError("We've run out of memory")
+    dec_values = copy_predict(X, model)
 
     return dec_values
 
 
-def copy_predict(X, model, blas_function):
+def copy_predict(X, model):
 
     dec_values = np.empty(X.shape[0])
     predict_nodes = dense_to_libsvm(X)
 
     for i in range(X.shape[0]):
-        dec_values[i] = svm_predict(model, predict_nodes[i], blas_function)
+        dec_values[i] = svm_predict(model, predict_nodes[i])
 
     return dec_values
 
 
-def svm_predict(model, node, blas_function):
+def svm_predict(model, node):
     
     nr_class = model.nr_class
     l = model.l
     kvalue = np.empty(l)
     
     for i in range(l):
-        kvalue[i] = k_function(node, model.SV[i], model.param, blas_function)
+        kvalue[i] = k_function(node, model.SV[i], model.param)
     
     start = np.empty(nr_class)
     start[0] = 0
@@ -176,15 +154,15 @@ def svm_predict(model, node, blas_function):
     
     return model.label[vote_max_id]
 
-def k_function(x, y, param, blas_function):
+def k_function(x, y, param):
     
     sum = 0
     dim = min(x.dim, y.dim)
     m_array = np.empty(dim)
 
     for i in range(dim):
-        m_array[i] = x.values[i] * y.values[i]
-    sum = blas_function(dim, m_array, 1, m_array, 1)
+        m_array[i] = x.values[i] - y.values[i]
+    sum = np.dot(m_array, m_array)
 
     for i in range(dim, x.dim):
         sum += x.values[i] * x.values[i]
@@ -210,30 +188,28 @@ if __name__ == "__main__":
     X_train_feature = np.array(X_train_feature)
     X_test_feature = np.array(X_test_feature)
 
-    # (3)测试模型精度
+    # (3)加载SVM模型参数
     params = np.load('model/params.npz')
-    X_test_feature, support, SV, nSV, sv_coef, intercept, probA, probB, \
-    svm_type, kernel, degree, gamma, coef0, cache_size = \
-    params['X_test_feature'], params['support'], params['SV'], params['nSV'], \
-    params['sv_coef'], params['intercept'], params['probA'], params['probB'], \
-    params['svm_type'], params['kernel'], params['degree'], params['gamma'], \
-    params['coef0'], params['cache_size']
+    support, SV, nSV, sv_coef, intercept, \
+    svm_type, kernel, degree, gamma, coef0 = \
+    params['support'], params['SV'], params['nSV'], \
+    params['sv_coef'], params['intercept'], \
+    params['svm_type'], params['kernel'], params['degree'], \
+    params['gamma'], params['coef0']
     
+    # (4)测试模型精度
     start_time = time.time()
     result = predict(X = X_test_feature, 
                      support = support,
                      SV = SV,
                      nSV = nSV, 
                      sv_coef = sv_coef,
-                     intercept = intercept, 
-                     probA = probA, 
-                     probB = probB, 
+                     intercept = intercept,  
                      svm_type = svm_type, 
                      kernel = kernel, 
                      degree = degree, 
                      gamma = gamma, 
-                     coef0 = coef0, 
-                     cache_size = cache_size)
+                     coef0 = coef0)
     end_time = time.time()
     print("{:f}s for {:d} tests predict".format(end_time - start_time, y_test.shape[0]))
     print("{:d} positive classes in {:d} tests".format(np.sum(y_test), y_test.shape[0]))
