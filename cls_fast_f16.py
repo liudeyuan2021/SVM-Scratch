@@ -1,3 +1,4 @@
+from math import degrees
 import numpy as np
 import cv2
 from sklearn.model_selection import train_test_split
@@ -50,6 +51,11 @@ print('self.coef0', clf.coef0)
 print('self.gamma', clf._gamma)
 print('self.cache_size', clf.cache_size)
 print()
+
+np.savez('model/params.npz', X_test_feature = X_test_feature, support = clf.support_, SV = clf.support_vectors_,
+          nSV = clf._n_support, sv_coeff = clf._dual_coef_, intercept = clf._intercept_, probA = clf.probA_, probB = clf.probB_,
+          svm_type = LIBSVM_IMPL.index(clf._impl), kernel = clf.kernel, degree = clf.degree, gamma = clf._gamma, coef0 = clf.coef0,
+          cache_size = clf.cache_size)
 
 print(clf.break_ties, clf.decision_function_shape, len(clf.classes_), clf._sparse, callable(clf.kernel))
 
