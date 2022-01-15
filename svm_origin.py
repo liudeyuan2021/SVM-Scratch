@@ -2,17 +2,11 @@
 ## Created by Liu Deyuan on 2021/01/15.
 ##
 
-import numpy as np
-import cv2
-from sklearn.model_selection import train_test_split
-from sklearn import svm
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import f1_score
-
-from dataloader import dataloader
-from utils import feature_extraction
-
 import time
+import numpy as np
+from sklearn import svm
+from sklearn.metrics import accuracy_score, f1_score
+from hog_origin import feature_extraction
 
 # (1)读取数据
 data = np.load('dataset/data_float16.npz')
@@ -20,15 +14,12 @@ X_train, X_test, y_train, y_test = data['X_train'], data['X_test'], data['y_trai
 
 # (2)提取数据特征
 print('Begin Feature Extraction')
-X_train_feature = feature_extraction(X_train, feature='HOG')
+X_train_feature = feature_extraction(X_train)
 start_time = time.time()
-X_test_feature = feature_extraction(X_test, feature='HOG')
+X_test_feature = feature_extraction(X_test)
 end_time = time.time()
 print("{:f}s for {:d} test feature extraction".format(end_time - start_time, y_test.shape[0]))
 print()
-
-X_train_feature = np.array(X_train_feature)
-X_test_feature = np.array(X_test_feature)
 
 # (3)创建SVM模型
 print('Begin SVM')

@@ -4,7 +4,7 @@
 
 import time
 import numpy as np
-from utils import feature_extraction
+from hog_ldy import feature_extraction
 from sklearn.metrics import accuracy_score, f1_score
 
 class svm_node:
@@ -186,15 +186,12 @@ if __name__ == "__main__":
 
     # (2)提取数据特征
     print('Begin Feature Extraction')
-    X_train_feature = feature_extraction(X_train, feature='HOG')
+    X_train_feature = feature_extraction(X_train)
     start_time = time.time()
-    X_test_feature = feature_extraction(X_test, feature='HOG')
+    X_test_feature = feature_extraction(X_test)
     end_time = time.time()
     print("{:f}s for {:d} test feature extraction".format(end_time - start_time, y_test.shape[0]))
     print()
-
-    X_train_feature = np.array(X_train_feature)
-    X_test_feature = np.array(X_test_feature)
 
     # (3)加载SVM模型参数
     params = np.load('model/params.npz')
