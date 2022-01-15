@@ -1,3 +1,4 @@
+from cgi import parse_multipart
 from math import degrees
 import numpy as np
 
@@ -58,31 +59,40 @@ def predict(X, support, SV, nSV, sv_coef, intercept,
     # BlasFunctions blas_functions
     # blas_functions.dot = _dot[double]
     # #TODO: use check_model
-    # try:
-    #     dec_values = np.empty(X.shape[0])
+    try:
+        dec_values = np.empty(X.shape[0])
     #     with nogil:
     #         rv = copy_predict(X.data, model, X.shape, dec_values.data, &blas_functions)
     #     if rv < 0:
     #         raise MemoryError("We've run out of memory")
-    # finally:
+    finally:
+        pass
     #     free_model(model)
 
-    # return dec_values
-    print('hello')
+    return dec_values
 
 if __name__ == "__main__":
-    X_test_feature, support, SV, nSV, sv_coef, intercept, probA, probB, svm_type, kernel, degree, gamma, coef0, cache_size = np.load('model/params.npz')
-    predict(X = X_test_feature, 
-            support = support,
-            SV = SV,
-            nSV = nSV, 
-            sv_coef = sv_coef,
-            intercept = intercept, 
-            probA = probA, 
-            probB = probB, 
-            svm_type = svm_type, 
-            kernel = kernel, 
-            degree = degree, 
-            gamma = gamma, 
-            coef0 = coef0, 
-            cache_size = cache_size)
+    params = np.load('model/params.npz')
+    X_test_feature, support, SV, nSV, sv_coef, intercept, probA, probB, \
+    svm_type, kernel, degree, gamma, coef0, cache_size = \
+    params['X_test_feature'], params['support'], params['SV'], params['nSV'], \
+    params['sv_coef'], params['intercept'], params['probA'], params['probB'], \
+    params['svm_type'], params['kernel'], params['degree'], params['gamma'], \
+    params['coef0'], params['cache_size']
+    
+
+    result = predict(X = X_test_feature, 
+                     support = support,
+                     SV = SV,
+                     nSV = nSV, 
+                     sv_coef = sv_coef,
+                     intercept = intercept, 
+                     probA = probA, 
+                     probB = probB, 
+                     svm_type = svm_type, 
+                     kernel = kernel, 
+                     degree = degree, 
+                     gamma = gamma, 
+                     coef0 = coef0, 
+                     cache_size = cache_size)
+    print(result)
