@@ -21,21 +21,17 @@ start_time = time.time()
 X_test_feature = feature_extraction(X_test, feature='HOG')
 end_time = time.time()
 print("{:f}s for {:d} test feature extraction".format(end_time - start_time, y_test.shape[0]))
+print()
 
-# print(X_train.shape)
-# print(len(X_train_feature))
-# print([len(i) for i in X_train_feature])
+X_train_feature = np.array(X_train_feature)
+X_test_feature = np.array(X_test_feature)
 
 # Construct the Model
 print('Begin SVM')
-# clf = svm.SVC(gamma='scale', decision_function_shape='ovo')
 clf = svm.SVC()
 
 # Train the Model
 clf.fit(X_train_feature, y_train)
-
-
-X_test_feature = np.array(X_test_feature)
 
 LIBSVM_IMPL = ["c_svc", "nu_svc", "one_class", "epsilon_svr", "nu_svr"]
 
@@ -55,14 +51,23 @@ print('self.gamma', clf._gamma)
 print('self.cache_size', clf.cache_size)
 print()
 
-# Get the Result
+# Print the Result with Evaluation
+start_time = time.time()
+result = clf.predict(X_train_feature)
+end_time = time.time()
+print("{:f}s for {:d} tests predict".format(end_time - start_time, y_train.shape[0]))
+print("{:d} positive classes in {:d} tests".format(np.sum(y_train), y_train.shape[0]))
+print("accuracy_score: {:f}".format(accuracy_score(y_train, result)))
+print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_train, result, normalize=False)), len(y_train)))
+print("f1_score: {:f}".format(f1_score(y_train, result)))
+print()
+
 start_time = time.time()
 result = clf.predict(X_test_feature)
 end_time = time.time()
 print("{:f}s for {:d} tests predict".format(end_time - start_time, y_test.shape[0]))
-
-# Print the Result with Evaluation
 print("{:d} positive classes in {:d} tests".format(np.sum(y_test), y_test.shape[0]))
 print("accuracy_score: {:f}".format(accuracy_score(y_test, result)))
 print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_test, result, normalize=False)), len(y_test)))
 print("f1_score: {:f}".format(f1_score(y_test, result)))
+print()
