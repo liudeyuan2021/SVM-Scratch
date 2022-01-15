@@ -4,12 +4,10 @@ import numpy as np
 import cv2
 import os
 from tqdm import tqdm
-import torch
-from torch.nn import UpsamplingBilinear2d
 
 data_dir = {
-    0: 'dataset/0',    # Class 0 with its Data_Dir
-    1: 'dataset/1',    # Class 1 with its Data_Dir
+    0: '/Volumes/Untitled/baonan/0106Cls/0',    # Class 0 with its Data_Dir
+    1: '/Volumes/Untitled/baonan/0106Cls/1',    # Class 1 with its Data_Dir
 }
 
 
@@ -38,41 +36,26 @@ def dataloader(label):
 
     dir = data_dir[label]
     subdirs = os.listdir(dir)
-    resize = UpsamplingBilinear2d(size=(300, 400))
-    # for subdir in subdirs:
     for subdir in tqdm(subdirs):
         bin_file, width, height = get_bin_file_with_width_and_height(os.path.join(dir, subdir))
         # print(bin_file, width, height, sep=' ')
         image = read_bin(os.path.join(dir, subdir, bin_file), width, height)
-        # image = cv2.resize(image, (400, 300))
-        image = resize(torch.from_numpy(image)[None, None, :, :]).squeeze().numpy()
-        # print(image.shape)
-        images.append(image)
-        labels.append(label)
 
-    return images, labels
-
-def dataloader_test(label):
-    images, labels = [], []
-
-    dir = data_dir[label]
-    files = os.listdir(dir)
-    resize = UpsamplingBilinear2d(size=(300, 400))
-    
-    for file in tqdm(files):
-        image = cv2.imread(os.path.join(dir, file), cv2.IMREAD_GRAYSCALE)
-        image = cv2.resize(image, (400, 300)).squeeze()
-        image = np.array(image, dtype=np.float16)
-        image = image / 255.0
-        # print(image)
-        # cv2.imshow('0', image)
-        # cv2.waitKey(1000)
+        # 对包楠写的dataloader做了一些修改
+        # torch.resize改成了opencv.resize，测试效果相同
+        # 我是在cpu上跑的，cpu貌似不支持float16的resize，需要先转成float32，不知道包楠怎么跑的
+        image = np.array(image, np.float32)
+        image = cv2.resize(image, dsize=(400, 300), interpolation=cv2.INTER_LINEAR)
         # image = resize(torch.from_numpy(image)[None, None, :, :]).squeeze().numpy()
+
+        # 再转回float16
+        image = np.array(image, np.float16)
+
         images.append(image)
         labels.append(label)
 
     return images, labels
 
 if __name__ == '__main__':
-    dataloader_test(0)
+    dataloader(0)
 
