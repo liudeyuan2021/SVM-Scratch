@@ -43,7 +43,6 @@ def predict(X, support, SV, nSV, sv_coef, intercept,
     dec_values : array
         Predicted values.
     """
-    # np.ndarray[np.float64_t, ndim=1, mode='c'] dec_values
     # svm_parameter param
     # svm_model *model
     # int rv
