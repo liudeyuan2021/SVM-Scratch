@@ -1,5 +1,3 @@
-from cgi import parse_multipart
-from math import degrees
 import numpy as np
 
 def predict(X, support, SV, nSV, sv_coef, intercept, 
