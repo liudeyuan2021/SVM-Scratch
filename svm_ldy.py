@@ -1,3 +1,7 @@
+##
+## Created by Liu Deyuan on 2021/01/15.
+##
+
 import time
 import numpy as np
 from utils import feature_extraction
@@ -28,7 +32,8 @@ class svm_predict_model:
         self.SV = SV
         self.nSV = nSV
         self.sv_coef = sv_coef
-        self.rho = rho
+        self.rho = np.copy(rho) # 由于后续的代码会修改rho的值，需要使用copy避免对后续的测试造成影响
+                                # 我们使用的模型nr_class=2，rho其实只有1个值，在C++中可以使用值传递
 
         m = nr_class * (nr_class - 1) // 2
         
@@ -36,8 +41,9 @@ class svm_predict_model:
         self.SV = dense_to_libsvm(self.SV) # 支撑向量转化，和源代码对应，方便之后修改为C++代码
         self.label = np.arange(nr_class) # 类标签
 
+        # sklearn的此处C++代码不太理解，但由于我们使用的模型nr_class=2，不执行此步骤也无影响
         # for i in range(self.nr_class-1):
-        #     self.sv_coef[i] = self.sv_coef[i] + i * self.l
+        #     self.sv_coef[i] = self.sv_coef[0] + i * self.l
 
         for i in range(m):
             self.rho[i] = -self.rho[i]
@@ -121,6 +127,8 @@ def svm_predict(model, node):
 
     vote = np.zeros(nr_class)
 
+    # 此处的循环是为了兼容不同的nr_class的情况
+    # 我们使用的模型nr_class=2，所以实际上只会有i=0，j=1这种情况，在C++实现时可以简化掉外层的循环
     p = 0
     for i in range(nr_class):
         for j in range(i+1, nr_class):
@@ -198,6 +206,27 @@ if __name__ == "__main__":
     params['gamma'], params['coef0']
     
     # (4)测试模型精度
+    print(' -------- 自行实现的SVM模型测试 ---------- ')
+    start_time = time.time()
+    result = predict(X = X_train_feature, 
+                     support = support,
+                     SV = SV,
+                     nSV = nSV, 
+                     sv_coef = sv_coef,
+                     intercept = intercept,  
+                     svm_type = svm_type, 
+                     kernel = kernel, 
+                     degree = degree, 
+                     gamma = gamma, 
+                     coef0 = coef0)
+    end_time = time.time()
+    print("{:f}s for {:d} train set predict".format(end_time - start_time, y_train.shape[0]))
+    print("{:d} positive classes in {:d} train set".format(np.sum(y_train), y_train.shape[0]))
+    print("accuracy_score: {:f}".format(accuracy_score(y_train, result)))
+    print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_train, result, normalize=False)), len(y_train)))
+    print("f1_score: {:f}".format(f1_score(y_train, result)))
+    print()
+    
     start_time = time.time()
     result = predict(X = X_test_feature, 
                      support = support,
@@ -211,8 +240,8 @@ if __name__ == "__main__":
                      gamma = gamma, 
                      coef0 = coef0)
     end_time = time.time()
-    print("{:f}s for {:d} tests predict".format(end_time - start_time, y_test.shape[0]))
-    print("{:d} positive classes in {:d} tests".format(np.sum(y_test), y_test.shape[0]))
+    print("{:f}s for {:d} test set predict".format(end_time - start_time, y_test.shape[0]))
+    print("{:d} positive classes in {:d} test set".format(np.sum(y_test), y_test.shape[0]))
     print("accuracy_score: {:f}".format(accuracy_score(y_test, result)))
     print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_test, result, normalize=False)), len(y_test)))
     print("f1_score: {:f}".format(f1_score(y_test, result)))

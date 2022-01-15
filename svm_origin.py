@@ -1,4 +1,7 @@
-from math import degrees
+##
+## Created by Liu Deyuan on 2021/01/15.
+##
+
 import numpy as np
 import cv2
 from sklearn.model_selection import train_test_split
@@ -57,13 +60,15 @@ np.savez('model/params.npz', support = clf.support_, SV = clf.support_vectors_, 
           kernel = clf.kernel, degree = clf.degree, gamma = clf._gamma, coef0 = clf.coef0)
 
 print(clf.break_ties, clf.decision_function_shape, len(clf.classes_), clf._sparse, callable(clf.kernel))
+print()
 
 # (6)测试模型精度
+print(' -------- 原版的SVM模型测试 ---------- ')
 start_time = time.time()
 result = clf.predict(X_train_feature)
 end_time = time.time()
-print("{:f}s for {:d} tests predict".format(end_time - start_time, y_train.shape[0]))
-print("{:d} positive classes in {:d} tests".format(np.sum(y_train), y_train.shape[0]))
+print("{:f}s for {:d} train set predict".format(end_time - start_time, y_train.shape[0]))
+print("{:d} positive classes in {:d} train set".format(np.sum(y_train), y_train.shape[0]))
 print("accuracy_score: {:f}".format(accuracy_score(y_train, result)))
 print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_train, result, normalize=False)), len(y_train)))
 print("f1_score: {:f}".format(f1_score(y_train, result)))
@@ -72,8 +77,8 @@ print()
 start_time = time.time()
 result = clf.predict(X_test_feature)
 end_time = time.time()
-print("{:f}s for {:d} tests predict".format(end_time - start_time, y_test.shape[0]))
-print("{:d} positive classes in {:d} tests".format(np.sum(y_test), y_test.shape[0]))
+print("{:f}s for {:d} test set predict".format(end_time - start_time, y_test.shape[0]))
+print("{:d} positive classes in {:d} test set".format(np.sum(y_test), y_test.shape[0]))
 print("accuracy_score: {:f}".format(accuracy_score(y_test, result)))
 print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_test, result, normalize=False)), len(y_test)))
 print("f1_score: {:f}".format(f1_score(y_test, result)))
