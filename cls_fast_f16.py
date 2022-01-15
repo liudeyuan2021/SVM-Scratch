@@ -11,11 +11,11 @@ from utils import feature_extraction
 
 import time
 
-# Load the Data which is Preloaded by data2npy.py
+# (1)读取数据
 data = np.load('dataset/data_float16.npz')
 X_train, X_test, y_train, y_test = data['X_train'], data['X_test'], data['y_train'], data['y_test']
 
-# Extract the Feature
+# (2)提取数据特征
 print('Begin Feature Extraction')
 X_train_feature = feature_extraction(X_train, feature='HOG')
 start_time = time.time()
@@ -27,15 +27,15 @@ print()
 X_train_feature = np.array(X_train_feature)
 X_test_feature = np.array(X_test_feature)
 
-# Construct the Model
+# (3)创建SVM模型
 print('Begin SVM')
-clf = svm.SVC()
+clf = svm.SVC() # 默认kernel为rbf，测试代码仅支持kernel为rbf
 
-# Train the Model
+# (4)训练SVM模型
 clf.fit(X_train_feature, y_train)
 
+# (5)保存SVM模型参数
 LIBSVM_IMPL = ["c_svc", "nu_svc", "one_class", "epsilon_svr", "nu_svr"]
-
 print('X_test_feature', X_test_feature.shape)
 print('self.support_', clf.support_.shape, clf.support_)
 print('self.support_vectors_', clf.support_vectors_.shape, clf.support_vectors_)
@@ -59,7 +59,7 @@ np.savez('model/params.npz', X_test_feature = X_test_feature, support = clf.supp
 
 print(clf.break_ties, clf.decision_function_shape, len(clf.classes_), clf._sparse, callable(clf.kernel))
 
-# Print the Result with Evaluation
+# (6)测试模型精度
 start_time = time.time()
 result = clf.predict(X_train_feature)
 end_time = time.time()
