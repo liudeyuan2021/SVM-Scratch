@@ -51,6 +51,8 @@ print('self.gamma', clf._gamma)
 print('self.cache_size', clf.cache_size)
 print()
 
+print(clf.break_ties, clf.decision_function_shape, len(clf.classes_), clf._sparse, callable(clf.kernel))
+
 # Print the Result with Evaluation
 start_time = time.time()
 result = clf.predict(X_train_feature)
