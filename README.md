@@ -11,7 +11,7 @@
 + [sklearn/svm/src/libsvm/svm.cpp](https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/svm/src/libsvm/svm.cpp#L2818)
 + [sklearn/utils/_cython_blas.pyx](https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_cython_blas.pyx#L20)
 
-#### 2. hog的参考代码
+#### 2. Hog的参考代码
 
 另外还参考了skimage的Python和C++的代码实现了hog的python代码，主要参考代码如下：
 + [skimage/feature/_hog.py](https://github.com/scikit-image/scikit-image/blob/main/skimage/feature/_hog.py#L50)
