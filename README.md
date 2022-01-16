@@ -2,7 +2,7 @@
 
 训练代码使用Python，测试代码将使用C++重写
 
-#### 1 SVM的参考代码
+#### 1. SVM的参考代码
 参考sklearn的Python和C++的代码实现了SVM测试部分的python代码，基本无任何包依赖，可较方便地改写为C++代码集成到项目中，主要参考代码如下：
 + [sklearn/svm/_libsvm.pxi](https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/svm/_libsvm.pxi#L9)
 + [sklearn/svm/_libsvm.pyx](https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/svm/_libsvm.pyx#L283)
