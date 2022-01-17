@@ -6,8 +6,8 @@ import os
 from tqdm import tqdm
 
 data_dir = {
-    0: '/Volumes/Untitled/baonan/0106Cls/0',    # Class 0 with its Data_Dir
-    1: '/Volumes/Untitled/baonan/0106Cls/1',    # Class 1 with its Data_Dir
+    0: '/Volumes/Untitled/baonan/k1_result/0',    # Class 0 with its Data_Dir
+    1: '/Volumes/Untitled/baonan/k1_result/1',    # Class 1 with its Data_Dir
 }
 
 

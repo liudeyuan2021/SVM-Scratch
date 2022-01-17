@@ -183,14 +183,24 @@ if __name__ == "__main__":
     # (1)读取数据
     data = np.load('dataset/data_float16.npz')
     X_train, X_test, y_train, y_test = data['X_train'], data['X_test'], data['y_train'], data['y_test']
+    
+    data_new = np.load('dataset/data_float16_new.npz')
+    X_new, y_new = data_new['X_new'], data_new['y_new']
 
     # (2)提取数据特征
     print('Begin Feature Extraction')
     X_train_feature = feature_extraction(X_train)
+    
     start_time = time.time()
     X_test_feature = feature_extraction(X_test)
     end_time = time.time()
-    print("{:f}s for {:d} test feature extraction".format(end_time - start_time, y_test.shape[0]))
+    print("{:f}s for {:d} test set feature extraction".format(end_time - start_time, y_test.shape[0]))
+    print()
+
+    start_time = time.time()
+    X_new_feature = feature_extraction(X_new)
+    end_time = time.time()
+    print("{:f}s for {:d} new set feature extraction".format(end_time - start_time, y_new.shape[0]))
     print()
 
     # (3)加载SVM模型参数
@@ -242,4 +252,24 @@ if __name__ == "__main__":
     print("accuracy_score: {:f}".format(accuracy_score(y_test, result)))
     print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_test, result, normalize=False)), len(y_test)))
     print("f1_score: {:f}".format(f1_score(y_test, result)))
+    print()
+
+    start_time = time.time()
+    result = predict(X = X_new_feature, 
+                     support = support,
+                     SV = SV,
+                     nSV = nSV, 
+                     sv_coef = sv_coef,
+                     intercept = intercept,  
+                     svm_type = svm_type, 
+                     kernel = kernel, 
+                     degree = degree, 
+                     gamma = gamma, 
+                     coef0 = coef0)
+    end_time = time.time()
+    print("{:f}s for {:d} new set predict".format(end_time - start_time, y_new.shape[0]))
+    print("{:d} positive classes in {:d} new set".format(np.sum(y_new), y_new.shape[0]))
+    print("accuracy_score: {:f}".format(accuracy_score(y_new, result)))
+    print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_new, result, normalize=False)), len(y_new)))
+    print("f1_score: {:f}".format(f1_score(y_new, result)))
     print()
