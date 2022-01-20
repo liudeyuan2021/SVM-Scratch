@@ -42,23 +42,23 @@ clf.fit(X_train_feature, y_train)
 LIBSVM_IMPL = ["c_svc", "nu_svc", "one_class", "epsilon_svr", "nu_svr"]
 print('X_test_feature', X_test_feature.shape)
 print('self.support_', clf.support_.shape, clf.support_)
-print('self.support_vectors_', clf.support_vectors_.shape, clf.support_vectors_)
+print('self.support_vectors_', clf.support_vectors_.shape, np.array(clf.support_vectors_, dtype=np.float16))
 print('self._n_support', clf._n_support)
-print('self._dual_coef_', clf._dual_coef_.shape, clf._dual_coef_)
-print('self._intercept_', clf._intercept_)
+print('self._dual_coef_', clf._dual_coef_.shape, np.array(clf._dual_coef_, dtype=np.float16))
+print('self._intercept_', np.array(clf._intercept_, dtype=np.float16))
 print('self._probA', clf._probA)
 print('self._probB', clf._probB)
 print('svm_type', LIBSVM_IMPL.index(clf._impl))
 print('kernel', clf.kernel)
 print('self.degree', clf.degree)
-print('self.coef0', clf.coef0)
-print('self.gamma', clf._gamma)
+print('self.coef0', np.float16(clf.coef0))
+print('self.gamma', np.float16(clf._gamma))
 print('self.cache_size', clf.cache_size)
 print()
 
-np.savez('model/params.npz', support = clf.support_, SV = clf.support_vectors_, nSV = clf._n_support, 
-          sv_coef = clf._dual_coef_, intercept = clf._intercept_, svm_type = LIBSVM_IMPL.index(clf._impl), 
-          kernel = clf.kernel, degree = clf.degree, gamma = clf._gamma, coef0 = clf.coef0)
+np.savez('model/params.npz', support = clf.support_, SV = np.array(clf.support_vectors_, dtype=np.float16), nSV = clf._n_support, 
+          sv_coef = np.array(clf._dual_coef_, dtype=np.float16), intercept = np.array(clf._intercept_, dtype=np.float16), svm_type = LIBSVM_IMPL.index(clf._impl), 
+          kernel = clf.kernel, degree = clf.degree, gamma = np.float16(clf._gamma), coef0 = np.float16(clf.coef0))
 
 print(clf.break_ties, clf.decision_function_shape, len(clf.classes_), clf._sparse, callable(clf.kernel))
 print()

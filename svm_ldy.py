@@ -102,7 +102,7 @@ def predict(X, support, SV, nSV, sv_coef, intercept,
 
 def copy_predict(X, model):
 
-    dec_values = np.empty(X.shape[0])
+    dec_values = np.empty(X.shape[0]) # int类型
     predict_nodes = dense_to_libsvm(X)
 
     for i in range(X.shape[0]):
@@ -115,17 +115,17 @@ def svm_predict(model, node):
     
     nr_class = model.nr_class
     l = model.l
-    kvalue = np.empty(l)
+    kvalue = np.empty(l, dtype=np.float16)
     
     for i in range(l):
         kvalue[i] = k_function(node, model.SV[i], model.param)
     
-    start = np.empty(nr_class)
+    start = np.empty(nr_class) # int类型
     start[0] = 0
     for i in range(1, nr_class):
         start[i] = start[i-1] + model.nSV[i-1]
 
-    vote = np.zeros(nr_class)
+    vote = np.zeros(nr_class) # int类型
 
     # 此处的循环是为了兼容不同的nr_class的情况
     # 我们使用的模型nr_class=2，所以实际上只会有i=0，j=1这种情况，在C++实现时可以简化掉外层的循环
@@ -166,7 +166,7 @@ def k_function(x, y, param):
     
     sum = 0
     dim = min(x.dim, y.dim)
-    m_array = np.empty(dim)
+    m_array = np.empty(dim, dtype=np.float16)
 
     for i in range(dim):
         m_array[i] = x.values[i] - y.values[i]
@@ -213,7 +213,7 @@ if __name__ == "__main__":
     params['gamma'], params['coef0']
     
     # (4)测试模型精度
-    print(' -------- 自行实现的SVM模型测试 ---------- ')
+    print(' -------- 自行实现的SVM模型测试(float16) ---------- ')
     start_time = time.time()
     result = predict(X = X_train_feature, 
                      support = support,
