@@ -12,9 +12,6 @@ from hog_origin import feature_extraction
 data = np.load('dataset/data_float16.npz')
 X_train, X_test, y_train, y_test = data['X_train'], data['X_test'], data['y_train'], data['y_test']
 
-data_new = np.load('dataset/data_float16_new.npz')
-X_new, y_new = data_new['X_new'], data_new['y_new']
-
 # (2)提取数据特征
 print('Begin Feature Extraction')
 X_train_feature = feature_extraction(X_train)
@@ -23,12 +20,6 @@ start_time = time.time()
 X_test_feature = feature_extraction(X_test)
 end_time = time.time()
 print("{:f}s for {:d} test set feature extraction".format(end_time - start_time, y_test.shape[0]))
-print()
-
-start_time = time.time()
-X_new_feature = feature_extraction(X_new)
-end_time = time.time()
-print("{:f}s for {:d} new set feature extraction".format(end_time - start_time, y_new.shape[0]))
 print()
 
 # (3)创建SVM模型
@@ -63,6 +54,18 @@ np.savez('model/params.npz', support = clf.support_, SV = np.array(clf.support_v
 print(clf.break_ties, clf.decision_function_shape, len(clf.classes_), clf._sparse, callable(clf.kernel))
 print()
 
+save_path = 'model/bin/'
+clf.support_.tofile(save_path+'01_support_int32.bin')
+clf.support_vectors_.astype(np.float32).tofile(save_path+'02_SV_float32.bin')
+clf._n_support.tofile(save_path+'03_nSV_int32.bin')
+clf._dual_coef_.astype(np.float32).tofile(save_path+'04_sv_coef_float32.bin')
+clf._intercept_.astype(np.float32).tofile(save_path+'05_intercept_float32.bin')
+np.array(LIBSVM_IMPL.index(clf._impl)).astype(np.float32).tofile(save_path+'06_svm_type_float32.bin')
+np.array(clf.kernel).tofile(save_path+'07_kernel_int32_string.bin')
+np.array(clf.degree).tofile(save_path+'08_degree_int32.bin')
+np.array(clf._gamma).astype(np.float32).tofile(save_path+'09_gamma_float32.bin')
+np.array(clf.coef0).astype(np.float32).tofile(save_path+'10_coef0_float32.bin')
+
 # (6)测试模型精度
 print(' -------- 原版的SVM模型测试 ---------- ')
 start_time = time.time()
@@ -83,14 +86,4 @@ print("{:d} positive classes in {:d} test set".format(np.sum(y_test), y_test.sha
 print("accuracy_score: {:f}".format(accuracy_score(y_test, result)))
 print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_test, result, normalize=False)), len(y_test)))
 print("f1_score: {:f}".format(f1_score(y_test, result)))
-print()
-
-start_time = time.time()
-result = clf.predict(X_new_feature)
-end_time = time.time()
-print("{:f}s for {:d} new set predict".format(end_time - start_time, y_new.shape[0]))
-print("{:d} positive classes in {:d} new set".format(np.sum(y_new), y_new.shape[0]))
-print("accuracy_score: {:f}".format(accuracy_score(y_new, result)))
-print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_new, result, normalize=False)), len(y_new)))
-print("f1_score: {:f}".format(f1_score(y_new, result)))
 print()
