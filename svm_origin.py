@@ -12,6 +12,9 @@ from hog_origin import feature_extraction
 data = np.load('dataset/data_float16.npz')
 X_train, X_test, y_train, y_test = data['X_train'], data['X_test'], data['y_train'], data['y_test']
 
+data_new = np.load('dataset/data_float16_new.npz')
+X_new, y_new = data_new['X_new'], data_new['y_new']
+
 # (2)提取数据特征
 print('Begin Feature Extraction')
 X_train_feature = feature_extraction(X_train)
@@ -21,6 +24,14 @@ X_test_feature = feature_extraction(X_test)
 end_time = time.time()
 print("{:f}s for {:d} test set feature extraction".format(end_time - start_time, y_test.shape[0]))
 print()
+
+start_time = time.time()
+X_new_feature = feature_extraction(X_new)
+end_time = time.time()
+print("{:f}s for {:d} new set feature extraction".format(end_time - start_time, y_new.shape[0]))
+print()
+
+print(X_new_feature.shape)
 
 # (3)创建SVM模型
 print('Begin SVM')
@@ -86,4 +97,14 @@ print("{:d} positive classes in {:d} test set".format(np.sum(y_test), y_test.sha
 print("accuracy_score: {:f}".format(accuracy_score(y_test, result)))
 print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_test, result, normalize=False)), len(y_test)))
 print("f1_score: {:f}".format(f1_score(y_test, result)))
+print()
+
+start_time = time.time()
+result = clf.predict(X_new_feature)
+end_time = time.time()
+print("{:f}s for {:d} new set predict".format(end_time - start_time, y_new.shape[0]))
+print("{:d} positive classes in {:d} new set".format(np.sum(y_new), y_new.shape[0]))
+print("accuracy_score: {:f}".format(accuracy_score(y_new, result)))
+print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_new, result, normalize=False)), len(y_new)))
+print("f1_score: {:f}".format(f1_score(y_new, result)))
 print()
