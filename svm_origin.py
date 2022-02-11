@@ -13,7 +13,19 @@ data = np.load('dataset/data_float16.npz')
 X_train, X_test, y_train, y_test = data['X_train'], data['X_test'], data['y_train'], data['y_test']
 
 data_new = np.load('dataset/data_float16_new.npz')
-X_new, y_new = data_new['X_new'], data_new['y_new']
+X_new, y_new = data_new['X_new'][:5], data_new['y_new'][:5]
+
+# src = '/Volumes/Untitled/baonan/SenseSR/'
+# a = np.fromfile(f'{src}/111507/sr_111508_10bit[0]_output_zoom[1.23]_iso[122]_size[4080x3060]_cam[200240410]_ref[3]_commit[acc2bdd]_xml_SR_X_SDM_V3.0.1.6500_M1.4_k1_2022-02-09205459.yuv', dtype=np.uint8).reshape(4590, 4096)
+# a = a[:3060]
+# import cv2
+# # cv2.imshow('0', a)
+# # cv2.waitKey(5000)
+# a = np.array(a, dtype=np.float32)
+# a = cv2.resize(a, dsize=(400, 300), interpolation=cv2.INTER_LINEAR)
+# a = np.array(a, dtype=np.float16)
+# X_new[0] = a
+# y_new[0] = 1
 
 # (2)提取数据特征
 print('Begin Feature Extraction')
