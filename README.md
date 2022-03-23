@@ -36,7 +36,7 @@
 <img width="50%" src="image/ldy1.png">
 <img width="50%" src="image/ldy2.png">
 
-+ 自行实现的SVM(float16)
+<!-- + 自行实现的SVM(float16)
 
 <img width="50%" src="image/ldy1-float16.png">
-<img width="50%" src="image/ldy2-float16.png">
+<img width="50%" src="image/ldy2-float16.png"> -->
