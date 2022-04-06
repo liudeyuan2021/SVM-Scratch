@@ -9,11 +9,11 @@ from sklearn.metrics import accuracy_score, f1_score
 from hog_origin import feature_extraction
 
 # (1)读取数据
-data = np.load('dataset/data_float16.npz')
+data = np.load('dataset/data_text_float16.npz')
 X_train, X_test, y_train, y_test = data['X_train'], data['X_test'], data['y_train'], data['y_test']
 
-data_new = np.load('dataset/data_float16_new.npz')
-X_new, y_new = data_new['X_new'][:5], data_new['y_new'][:5]
+# data_new = np.load('dataset/data_float16_new.npz')
+# X_new, y_new = data_new['X_new'][:5], data_new['y_new'][:5]
 
 # src = '/Volumes/Untitled/baonan/SenseSR/'
 # a = np.fromfile(f'{src}/111507/sr_111508_10bit[0]_output_zoom[1.23]_iso[122]_size[4080x3060]_cam[200240410]_ref[3]_commit[acc2bdd]_xml_SR_X_SDM_V3.0.1.6500_M1.4_k1_2022-02-09205459.yuv', dtype=np.uint8).reshape(4590, 4096)
@@ -37,13 +37,13 @@ end_time = time.time()
 print("{:f}s for {:d} test set feature extraction".format(end_time - start_time, y_test.shape[0]))
 print()
 
-start_time = time.time()
-X_new_feature = feature_extraction(X_new)
-end_time = time.time()
-print("{:f}s for {:d} new set feature extraction".format(end_time - start_time, y_new.shape[0]))
-print()
+# start_time = time.time()
+# X_new_feature = feature_extraction(X_new)
+# end_time = time.time()
+# print("{:f}s for {:d} new set feature extraction".format(end_time - start_time, y_new.shape[0]))
+# print()
 
-print(X_new_feature.shape)
+# print(X_new_feature.shape)
 
 # (3)创建SVM模型
 print('Begin SVM')
@@ -111,12 +111,12 @@ print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_test, result, nor
 print("f1_score: {:f}".format(f1_score(y_test, result)))
 print()
 
-start_time = time.time()
-result = clf.predict(X_new_feature)
-end_time = time.time()
-print("{:f}s for {:d} new set predict".format(end_time - start_time, y_new.shape[0]))
-print("{:d} positive classes in {:d} new set".format(np.sum(y_new), y_new.shape[0]))
-print("accuracy_score: {:f}".format(accuracy_score(y_new, result)))
-print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_new, result, normalize=False)), len(y_new)))
-print("f1_score: {:f}".format(f1_score(y_new, result)))
-print()
+# start_time = time.time()
+# result = clf.predict(X_new_feature)
+# end_time = time.time()
+# print("{:f}s for {:d} new set predict".format(end_time - start_time, y_new.shape[0]))
+# print("{:d} positive classes in {:d} new set".format(np.sum(y_new), y_new.shape[0]))
+# print("accuracy_score: {:f}".format(accuracy_score(y_new, result)))
+# print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_new, result, normalize=False)), len(y_new)))
+# print("f1_score: {:f}".format(f1_score(y_new, result)))
+# print()
