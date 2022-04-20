@@ -8,8 +8,8 @@ from tqdm import tqdm
 from util import fileTool as FT
 
 data_dir = {
-    0: '/Volumes/Untitled/fubin/0/warped_merge_png',    # Class 0 with its Data_Dir
-    1: '/Volumes/Untitled/fubin/1/warped_merge_png',    # Class 1 with its Data_Dir
+    0: '/Volumes/Untitled/SVM/dataset_v2/0',    # Class 0 with its Data_Dir
+    1: '/Volumes/Untitled/SVM/dataset_v2/1',    # Class 1 with its Data_Dir
 }
 
 
@@ -32,7 +32,7 @@ def get_bin_file_with_width_and_height(path):
     return bin_file, width, height
 
 
-def dataloader_v1(label):
+def dataloader(label):
     """ Load the data from the label-specified directory, which is set in dict(data_dir) """
     images, labels = [], []
 
@@ -58,7 +58,7 @@ def dataloader_v1(label):
 
     return images, labels
 
-def dataloader(label):
+def dataloader_other(label):
     """ Load the data from the label-specified directory, which is set in dict(data_dir) """
     images, labels = [], []
 
@@ -74,5 +74,5 @@ def dataloader(label):
     return images, labels
 
 if __name__ == '__main__':
-    dataloader(0)
+    dataloader(1)
 
