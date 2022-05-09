@@ -3,14 +3,17 @@
 
 import numpy as np
 from sklearn.model_selection import train_test_split
-from dataloader import dataloader
+from dataloader import dataloader, data_dir
 
-X0, y0 = dataloader(0)
-X1, y1 = dataloader(1)
+X, y = [], []
 
-# Complete Set X, y
-X = np.concatenate((X0, X1))
-y = np.concatenate((y0, y1))
+for i in data_dir:
+    X_part, y_part = dataloader(i)
+    X.append(X_part)
+    y.append(y_part)
+
+X = np.concatenate(X)
+y = np.concatenate(y)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 np.savez('dataset/data_float16_v2.npz', X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)

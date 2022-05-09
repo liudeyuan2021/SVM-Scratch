@@ -8,8 +8,7 @@ from tqdm import tqdm
 from util import fileTool as FT
 
 data_dir = {
-    0: '/Volumes/Untitled/SVM/dataset_v2/0',    # Class 0 with its Data_Dir
-    1: '/Volumes/Untitled/SVM/dataset_v2/1',    # Class 1 with its Data_Dir
+    2: '/Volumes/Untitled/SVM/dataset_v2/2',    
 }
 
 
@@ -40,12 +39,9 @@ def dataloader(label):
     subdirs = os.listdir(dir)
     for subdir in tqdm(subdirs):
         bin_file, width, height = get_bin_file_with_width_and_height(os.path.join(dir, subdir))
-        # print(bin_file, width, height, sep=' ')
         image = read_bin(os.path.join(dir, subdir, bin_file), width, height)
 
-        # 对包楠写的dataloader做了一些修改
         # torch.resize改成了opencv.resize，测试效果相同
-        # 我是在cpu上跑的，cpu貌似不支持float16的resize，需要先转成float32，不知道包楠怎么跑的
         image = np.array(image, np.float32)
         image = cv2.resize(image, dsize=(400, 300), interpolation=cv2.INTER_LINEAR)
         # image = resize(torch.from_numpy(image)[None, None, :, :]).squeeze().numpy()

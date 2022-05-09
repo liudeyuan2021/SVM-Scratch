@@ -19,7 +19,7 @@
 
 #### 3. 使用方法
 
-+ 运行data2npy.py生成训练测试数据(包楠编写)
++ 运行data2npy.py生成训练测试数据
 + 运行svm_origin.py会训练与测试SVM模型并保存模型参数，调用的是sklearn的代码
 + 运行svm_ldy.py会加载模型参数进行测试，调用的是自行编写的代码
 + 数据集默认路径为dataset，模型参数默认保存路径为model，使用时可自行创建，如需要我使用的数据集和模型参数可访问[此链接](https://disk.pku.edu.cn:443/link/4CAE5BD228D6686F5783DAF33F22E798)下载(不同的数据集组织形式可能需要对dataloader做一定的修改，这个就不用细说了吧:smile:)
@@ -35,8 +35,3 @@
 
 <img width="50%" src="image/ldy1.png">
 <img width="50%" src="image/ldy2.png">
-
-<!-- + 自行实现的SVM(float16)
-
-<img width="50%" src="image/ldy1-float16.png">
-<img width="50%" src="image/ldy2-float16.png"> -->

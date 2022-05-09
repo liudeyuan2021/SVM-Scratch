@@ -7,6 +7,7 @@ import numpy as np
 from hog_ldy import feature_extraction
 from sklearn.metrics import accuracy_score, f1_score
 
+
 class svm_node:
 
     def __init__(self, dim, values):
@@ -22,6 +23,7 @@ class svm_predict_parameter:
         self.degree = degree    # for poly
         self.gamma = gamma      # for poly/rbf/sigmoid
         self.coef0 = coef0      # for poly/sigmoid
+
 
 class svm_predict_model:
 
@@ -41,7 +43,7 @@ class svm_predict_model:
         self.SV = dense_to_libsvm(self.SV) # 支撑向量转化，和源代码对应，方便之后修改为C++代码
         self.label = np.arange(nr_class) # 类标签
 
-        # sklearn的此处C++代码不太理解，但由于我们使用的模型nr_class=2，不执行此步骤也无影响
+        # sklearn的此处C++代码不太理解，实测中不执行此步骤也无影响
         # for i in range(self.nr_class-1):
         #     self.sv_coef[i] = self.sv_coef[0] + i * self.l
 
@@ -162,6 +164,7 @@ def svm_predict(model, node):
     
     return model.label[vote_max_id]
 
+
 def k_function(x, y, param):
     
     sum = 0
@@ -179,36 +182,33 @@ def k_function(x, y, param):
     
     return np.exp(-param.gamma * sum)
 
+
 if __name__ == "__main__":
     
-    def load_data():
-        files = ['dataset/data_float16_v1.npz', 'dataset/data_float16_v2.npz']
-        X_train_all, X_test_all, y_train_all, y_test_all = [], [], [], []
-        for file in files:
-            data = np.load(file)
-            X_train, X_test, y_train, y_test = data['X_train'], data['X_test'], data['y_train'], data['y_test']    
-            X_train_all.append(X_train)
-            X_test_all.append(X_test)
-            y_train_all.append(y_train)
-            y_test_all.append(y_test)
-        X_train_all = np.concatenate(X_train_all)
-        X_test_all = np.concatenate(X_test_all)
-        y_train_all = np.concatenate(y_train_all)
-        y_test_all = np.concatenate(y_test_all)
-        
-        return X_train_all, X_test_all, y_train_all, y_test_all
+    from svm_origin import load_data, analysis_result
 
     # (1)读取数据
     X_train, X_test, y_train, y_test = load_data()
 
+    # X_train = X_train[-10:]
+    # y_train = y_train[-10:]
+    # X_test = X_test[:2]
+    # y_test = y_test[:2]
+
+    # print(y_train, y_test)
+
     # (2)提取数据特征
     print('Begin Feature Extraction')
+    start_time = time.time()
     X_train_feature = feature_extraction(X_train)
+    end_time = time.time()
+    print(f'{end_time - start_time:.6f}s for {y_train.shape[0]} samples feature extraction')
+    print()
     
     start_time = time.time()
     X_test_feature = feature_extraction(X_test)
     end_time = time.time()
-    print("{:f}s for {:d} test set feature extraction".format(end_time - start_time, y_test.shape[0]))
+    print(f'{end_time - start_time:.6f}s for {y_test.shape[0]} samples feature extraction')
     print()
 
     # (3)加载SVM模型参数
@@ -235,12 +235,7 @@ if __name__ == "__main__":
                      gamma = gamma, 
                      coef0 = coef0)
     end_time = time.time()
-    print("{:f}s for {:d} train set predict".format(end_time - start_time, y_train.shape[0]))
-    print("{:d} positive classes in {:d} train set".format(np.sum(y_train), y_train.shape[0]))
-    print("accuracy_score: {:f}".format(accuracy_score(y_train, result)))
-    print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_train, result, normalize=False)), len(y_train)))
-    print("f1_score: {:f}".format(f1_score(y_train, result)))
-    print()
+    analysis_result(y_train, result, end_time-start_time)
     
     start_time = time.time()
     result = predict(X = X_test_feature, 
@@ -255,9 +250,4 @@ if __name__ == "__main__":
                      gamma = gamma, 
                      coef0 = coef0)
     end_time = time.time()
-    print("{:f}s for {:d} test set predict".format(end_time - start_time, y_test.shape[0]))
-    print("{:d} positive classes in {:d} test set".format(np.sum(y_test), y_test.shape[0]))
-    print("accuracy_score: {:f}".format(accuracy_score(y_test, result)))
-    print("accuracy_number: {:d}/{:d}".format(int(accuracy_score(y_test, result, normalize=False)), len(y_test)))
-    print("f1_score: {:f}".format(f1_score(y_test, result)))
-    print()
+    analysis_result(y_test, result, end_time-start_time)
