@@ -7,5 +7,5 @@ __declspec(align(4))
 __attribute__((aligned(4)))
 #endif
 static const unsigned char gamma_float32_bin[] = {
-0xc6,0xed,0x51,0x3c,};
+0xa7,0xb5,0x52,0x3c,};
 #endif // SVM_INCLUDE_GUARD_SVM_09_GAMMA_H
