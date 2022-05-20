@@ -16,4 +16,4 @@ X = np.concatenate(X)
 y = np.concatenate(y)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-np.savez('dataset/data_float16_v2.npz', X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
+np.savez('dataset/data_float16_v3.npz', X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
