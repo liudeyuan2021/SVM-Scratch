@@ -8,7 +8,7 @@ from tqdm import tqdm
 from util import fileTool as FT
 
 data_dir = {
-    1: '/Volumes/Untitled/SVM/dataset_v3/1',    
+    0: '/home/SENSETIME/liudeyuan1/Downloads/l2b_result_0520',    
 }
 
 
