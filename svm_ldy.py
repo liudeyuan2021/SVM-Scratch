@@ -190,8 +190,28 @@ if __name__ == "__main__":
     # (1)读取数据
     X_train, X_test, y_train, y_test = load_data()
 
-    # X_train = X_train[-10:]
-    # y_train = y_train[-10:]
+    import cv2
+    from dataloader import read_bin, get_bin_file_with_width_and_height
+
+    a = '/home/SENSETIME/liudeyuan1/Downloads/l2b_result_0520/20220316210730/warp_merged_4096x3072.bin'
+
+    images = []
+    labels = []
+
+    width, height = map(int, a.split('.')[0].split('_')[-1].split('x'))
+    image = read_bin(a, width, height)
+
+    image = np.array(image, np.float32)
+    image = cv2.resize(image, dsize=(400, 300), interpolation=cv2.INTER_LINEAR)
+    image = np.array(image, np.float16)
+
+    images.append(image)
+    labels.append(0)
+    X_test = np.array(images)
+    y_test = np.array(labels)
+
+    X_train = X_train[-10:]
+    y_train = y_train[-10:]
     # X_test = X_test[:2]
     # y_test = y_test[:2]
 
