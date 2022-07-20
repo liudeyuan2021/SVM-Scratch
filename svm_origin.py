@@ -2,12 +2,24 @@
 ## Created by Liu Deyuan on 2021/01/15.
 ##
 
+import cv2
 import time
 import numpy as np
 from sklearn import svm
 from sklearn.metrics import accuracy_score, f1_score
 from hog_origin import feature_extraction
 
+def enhance_data(X):
+    for i in range(X.shape[0]):
+        image = np.array(X[i], np.float32)
+        r = np.random.randint(0, 4)
+        rotate_flags = [-1, cv2.ROTATE_90_CLOCKWISE, cv2.ROTATE_180, cv2.ROTATE_90_COUNTERCLOCKWISE]
+        flag = rotate_flags[r]
+        if flag != -1:
+            image = cv2.rotate(image, flag)
+        image = cv2.resize(image, dsize=(400, 300), interpolation=cv2.INTER_LINEAR)
+        X[i] = np.array(image, np.float16)
+    return X
 
 def load_data():
     files = ['dataset/data_float16_v1.npz', 'dataset/data_float16_v3.npz', 'dataset/data_float16_v4.npz']
@@ -23,6 +35,9 @@ def load_data():
     X_test_all = np.concatenate(X_test_all)
     y_train_all = np.concatenate(y_train_all)
     y_test_all = np.concatenate(y_test_all)
+
+    X_train_all = enhance_data(X_train_all)
+    X_test_all = enhance_data(X_test_all)
     
     return X_train_all, X_test_all, y_train_all, y_test_all
 
