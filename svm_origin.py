@@ -22,7 +22,9 @@ def enhance_data(X):
     return X
 
 def load_data():
-    files = ['dataset/data_float16_v1.npz', 'dataset/data_float16_v3.npz', 'dataset/data_float16_v4.npz']
+    # files = ['dataset/data_float16_v1.npz', 'dataset/data_float16_v3.npz',
+    #          'dataset/data_float16_v4.npz', 'dataset/data_float16_v5.npz']
+    files = ['dataset/data_float16_v5.npz']
     X_train_all, X_test_all, y_train_all, y_test_all = [], [], [], []
     for file in files:
         data = np.load(file)

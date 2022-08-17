@@ -7,5 +7,5 @@ __declspec(align(4))
 __attribute__((aligned(4)))
 #endif
 static const unsigned char intercept_float32_bin[] = {
-0x29,0x89,0x82,0x3e,};
+0x6a,0x6d,0x54,0xbf,};
 #endif // SVM_INCLUDE_GUARD_SVM_05_INTERCEPT_H

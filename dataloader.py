@@ -8,7 +8,8 @@ from tqdm import tqdm
 from util import fileTool as FT
 
 data_dir = {
-    0: '/home/SENSETIME/liudeyuan1/Downloads/l2b_result_0520',    
+    0: '/home/SENSETIME/liudeyuan1/Desktop/2TB/oppo_result_0817/0', 
+    1: '/home/SENSETIME/liudeyuan1/Desktop/2TB/oppo_result_0817/1',   
 }
 
 
@@ -51,7 +52,11 @@ def dataloader(label):
 
         images.append(image)
         labels.append(label)
-
+    # print(len(images))
+    # if label == 1:
+    #     images = 5 * images
+    #     labels = 5 * labels
+    # print(len(images))
     return images, labels
 
 def dataloader_other(label):

@@ -2,9 +2,7 @@
 ## Created by Liu Deyuan on 2021/01/15.
 ##
 
-from re import X
 import time
-from cv2 import ROTATE_180, ROTATE_90_CLOCKWISE, ROTATE_90_COUNTERCLOCKWISE
 import numpy as np
 from hog_ldy import feature_extraction
 from sklearn.metrics import accuracy_score, f1_score
@@ -204,7 +202,7 @@ if __name__ == "__main__":
     image = read_bin(a, width, height)
 
     image = np.array(image, np.float32)
-    image = cv2.rotate(image, ROTATE_90_COUNTERCLOCKWISE)
+    image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
     b = np.array(image * 255, dtype=np.uint8)
     # cv2.imwrite('1.png', b)
 
