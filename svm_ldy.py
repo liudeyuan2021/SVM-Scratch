@@ -193,7 +193,7 @@ if __name__ == "__main__":
     import cv2
     from dataloader import read_bin, get_bin_file_with_width_and_height
 
-    a = '/Users/liudeyuan/Desktop/021036/warp_merged_4096x3072.bin'
+    a = '/Users/liudeyuan/Desktop/商汤杂项/SVM/input/warp_merged_3360x2512.bin'
 
     images = []
     labels = []
@@ -202,9 +202,9 @@ if __name__ == "__main__":
     image = read_bin(a, width, height)
 
     image = np.array(image, np.float32)
-    image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    # image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
     b = np.array(image * 255, dtype=np.uint8)
-    # cv2.imwrite('1.png', b)
+    cv2.imwrite('1.png', b)
 
     image = cv2.resize(image, dsize=(400, 300), interpolation=cv2.INTER_LINEAR)
     image = np.array(image, np.float16)
