@@ -8,8 +8,8 @@ from tqdm import tqdm
 from util import fileTool as FT
 
 data_dir = {
-    0: '/home/SENSETIME/liudeyuan1/Desktop/2TB/oppo_result_0817/0', 
-    1: '/home/SENSETIME/liudeyuan1/Desktop/2TB/oppo_result_0817/1',   
+    0: '/home/SENSETIME/liudeyuan1/Desktop/2TB/oppo_result_0820/0', 
+    1: '/home/SENSETIME/liudeyuan1/Desktop/2TB/oppo_result_0820/1',   
 }
 
 
