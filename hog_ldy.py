@@ -98,6 +98,15 @@ def hog_histograms(gradient_columns, gradient_rows, cell_columns, cell_rows,
     magnitude = np.hypot(gradient_columns, gradient_rows)
     orientation = np.rad2deg(np.arctan2(gradient_rows, gradient_columns)) % 180
 
+    # print('------------')
+    # print('Orientation:')
+    # for i in range(8):
+    #     for j in range(8):
+    #         print(orientation[i][j], end=' ')
+    #     print()
+    # print('------------')
+    # print()
+
     r_0 = cell_rows // 2
     c_0 = cell_columns // 2
     cc = cell_rows * number_of_cells_rows
@@ -362,6 +371,15 @@ def hog(image, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(3, 3),
     hog_histograms(g_col, g_row, c_col, c_row, s_col, s_row,
                                  n_cells_col, n_cells_row,
                                  orientations, orientation_histogram)
+    
+    # print('------------')
+    # print('Orientation Histogram:')
+    # for i in range(8):
+    #     for j in range(8):
+    #         print(orientation_histogram[i][j][0], end=' ')
+    #     print()
+    # print('------------')
+    # print()
 
     # 如果没有visualize的需求，C++的实现可去掉这一部分
     # now compute the histogram for each cell
