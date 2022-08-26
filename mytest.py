@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     images, labels = [], []
 
-    a = '/Users/liudeyuan/Desktop/商汤杂项/SVM/input/warp_merged_1664x1232.bin'
+    a = '/Users/liudeyuan/Desktop/商汤杂项/SVM/input/warp_merged_4096x3072.bin'
     width, height = map(int, a.split('.')[0].split('_')[-1].split('x'))
     image = read_bin(a, width, height)
 

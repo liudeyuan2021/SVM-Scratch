@@ -24,7 +24,7 @@ def enhance_data(X):
 def load_data():
     k1 = ['dataset/data_float16_v1.npz', 'dataset/data_float16_v3.npz', 'dataset/data_float16_v4.npz']
     oppo = ['dataset/data_float16_v5.npz', 'dataset/data_float16_v6.npz', 'dataset/data_float16_v7.npz']
-    files = k1
+    files = []
     files.extend(oppo)
     X_train_all, X_test_all, y_train_all, y_test_all = [], [], [], []
     for file in files:
