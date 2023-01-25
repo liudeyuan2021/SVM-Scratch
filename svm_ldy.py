@@ -186,72 +186,24 @@ def k_function(x, y, param):
 
 if __name__ == "__main__":
 
-    # c = cv2.imread('1.png')
-    # d = cv2.imread('2.png')
-    # print(cv2.PSNR(c, d))
-
     from svm_origin import load_data, analysis_result
 
     # (1)读取数据
     X_train, X_test, y_train, y_test = load_data()
 
-    import cv2
-    from dataloader import read_bin, get_bin_file_with_width_and_height
-
-    images = []
-    labels = []
-
-    # a = '/Users/liudeyuan/Desktop/商汤杂项/SVM/input/rsz_warped_400x300.bin'
-    # width, height = map(int, a.split('.')[0].split('_')[-1].split('x'))
-    # image = read_bin(a, width, height)
-
-    a = '/Users/liudeyuan/Desktop/商汤杂项/SVM/input/rsz_warped.png'
-    image = cv2.imread(a, cv2.IMREAD_GRAYSCALE)
-    image = np.array(image, dtype=np.float32)
-    image = image / 255.0
-
-    image = np.array(image, np.float32)
-    # image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    b = np.array(image * 255, dtype=np.uint8)
-    cv2.imwrite('1.png', b)
-
-    image = cv2.resize(image, dsize=(400, 300), interpolation=cv2.INTER_LINEAR)
-    image = np.array(image, np.float16)
-
-    images.append(image)
-    labels.append(1)
-    X_test = np.array(images)
-    y_test = np.array(labels)
-
-    X_train = X_train[-1:]
-    y_train = y_train[-1:]
-    # X_test = X_test[:2]
-    # y_test = y_test[:2]
-
-    # print(y_train, y_test)
-
     # (2)提取数据特征
-    # print('Begin Feature Extraction')
-    # start_time = time.time()
-    # X_train_feature = feature_extraction(X_train)
-    # end_time = time.time()
-    # print(f'{end_time - start_time:.6f}s for {y_train.shape[0]} samples feature extraction')
-    # print()
+    print('Begin Feature Extraction')
+    start_time = time.time()
+    X_train_feature = feature_extraction(X_train)
+    end_time = time.time()
+    print(f'{end_time - start_time:.6f}s for {y_train.shape[0]} samples feature extraction')
+    print()
     
     start_time = time.time()
     X_test_feature = feature_extraction(X_test)
     end_time = time.time()
-    # print(f'{end_time - start_time:.6f}s for {y_test.shape[0]} samples feature extraction')
-    # print()
-
-    # print('------------')
-    # print('Hog Feature:')
-    # for i in range(8):
-    #     for j in range(8):
-    #         print(X_test_feature[0][i * 8 + j], end=' ')
-    #     print()
-    # print('------------')
-    # print()
+    print(f'{end_time - start_time:.6f}s for {y_test.shape[0]} samples feature extraction')
+    print()
 
     # (3)加载SVM模型参数
     params = np.load('model/params.npz')
@@ -263,21 +215,21 @@ if __name__ == "__main__":
     params['gamma'], params['coef0']
     
     # (4)测试模型精度
-    # print(' -------- 自行实现的SVM模型测试(float16) ---------- ')
-    # start_time = time.time()
-    # result = predict(X = X_train_feature, 
-    #                  support = support,
-    #                  SV = SV,
-    #                  nSV = nSV, 
-    #                  sv_coef = sv_coef,
-    #                  intercept = intercept,  
-    #                  svm_type = svm_type, 
-    #                  kernel = kernel, 
-    #                  degree = degree, 
-    #                  gamma = gamma, 
-    #                  coef0 = coef0)
-    # end_time = time.time()
-    # analysis_result(y_train, result, end_time-start_time)
+    print(' -------- 自行实现的SVM模型测试(float16) ---------- ')
+    start_time = time.time()
+    result = predict(X = X_train_feature, 
+                     support = support,
+                     SV = SV,
+                     nSV = nSV, 
+                     sv_coef = sv_coef,
+                     intercept = intercept,  
+                     svm_type = svm_type, 
+                     kernel = kernel, 
+                     degree = degree, 
+                     gamma = gamma, 
+                     coef0 = coef0)
+    end_time = time.time()
+    analysis_result(y_train, result, end_time-start_time)
     
     start_time = time.time()
     result = predict(X = X_test_feature, 
